@@ -1,0 +1,146 @@
+package sistemacompleto2;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.JPasswordField;
+import javax.swing.JCheckBox;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class telalogin {
+
+	JFrame frame;
+	private JTextField txtUser;
+	private JPasswordField txtPassword;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					telalogin window = new telalogin();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public telalogin() {
+		initialize();
+	}
+
+	public void visivel() {
+		telalogin window = new telalogin();
+		window.frame.setVisible(true);
+	}
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.getContentPane().setBackground(new Color(135, 213, 250));
+		frame.setBounds(100, 100, 715, 446);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Wellcome");
+		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 50));
+		lblNewLabel.setBounds(240, 11, 314, 68);
+		frame.getContentPane().add(lblNewLabel);
+		
+		JLabel lblAoQuemSou = new JLabel("Who am I");
+		lblAoQuemSou.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 25));
+		lblAoQuemSou.setBounds(298, 56, 314, 68);
+		frame.getContentPane().add(lblAoQuemSou);
+		
+		JLabel lblDontHaveAn = new JLabel("Dont have an count? Sing up now!");
+		lblDontHaveAn.setFont(new Font("Times New Roman", Font.BOLD | Font.ITALIC, 20));
+		lblDontHaveAn.setBounds(386, 328, 314, 68);
+		frame.getContentPane().add(lblDontHaveAn);
+		
+		JLabel User = new JLabel("User");
+		User.setFont(new Font("Times New Roman", Font.PLAIN, 30));
+		User.setBounds(194, 135, 112, 35);
+		frame.getContentPane().add(User);
+		
+		JLabel Password = new JLabel("Password");
+		Password.setFont(new Font("Times New Roman", Font.PLAIN, 30));
+		Password.setBounds(194, 190, 129, 35);
+		frame.getContentPane().add(Password);
+		
+		txtUser = new JTextField();
+		txtUser.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+		txtUser.setBounds(386, 135, 219, 35);
+		frame.getContentPane().add(txtUser);
+		txtUser.setColumns(10);
+		
+		txtPassword = new JPasswordField();
+		txtPassword.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+		txtPassword.setBounds(386, 194, 219, 35);
+		frame.getContentPane().add(txtPassword);
+		
+		JCheckBox showpassword = new JCheckBox("Show Password");
+		showpassword.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(showpassword.isSelected()) {
+					txtPassword.setEchoChar((char)0);
+				} else {
+					txtPassword.setEchoChar('*');
+				}
+			}
+		});
+		showpassword.setBounds(316, 253, 112, 23);
+		frame.getContentPane().add(showpassword);
+		
+		JButton btnLogin = new JButton("Login");
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String usuario = txtUser.getText();
+				String senha = txtPassword.getText();
+				BancoDeDados banc = new BancoDeDados();
+				banc.conectar();
+				if(banc.estaConectado()) {
+					if(banc.verificarUsuario(usuario, senha)) {
+						JOptionPane.showMessageDialog(null, "Acesso permitido!","Aviso",1);
+						telasis window = new telasis(usuario);
+						window.frame.setVisible(true);
+					} else {
+						JOptionPane.showMessageDialog(null, "Acesso negado!","Aviso",1);
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Não foi possivel conectar ao banco de dados!","Erro",1);
+				}
+			}
+		});
+		btnLogin.setBounds(140, 319, 112, 23);
+		frame.getContentPane().add(btnLogin);
+		
+		JButton btnSing = new JButton("Sing");
+		btnSing.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				telacad window = new telacad();
+				window.frame.setVisible(true);
+			}
+		});
+		btnSing.setBounds(468, 319, 112, 23);
+		frame.getContentPane().add(btnSing);
+		
+		
+	}
+}
+
