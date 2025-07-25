@@ -1,0 +1,77 @@
+package sistemacompleto2;
+
+import java.awt.Color;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class telasis {
+
+	JFrame frame;
+	private String usuarioLogado;
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					telasis window = new telasis("nome do usuário");
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public telasis(String usuario) {
+		this.usuarioLogado = usuario;
+		initialize();
+	}
+	
+
+
+	public void visivel() {
+		telasis window = new telasis("nome do usuário");
+		window.frame.setVisible(true);
+	}
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.getContentPane().setBackground(new Color(135, 213, 250));
+		frame.setBounds(100, 100, 664, 431);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Você gosta de mim?");
+		lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 35));
+		lblNewLabel.setBounds(183, 32, 307, 92);
+		frame.getContentPane().add(lblNewLabel);
+		
+		JButton btnSim = new JButton("SIM");
+		btnSim.setBounds(210, 148, 89, 23);
+		frame.getContentPane().add(btnSim);
+		
+		JButton btnNao = new JButton("NÃO");
+		btnNao.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 QuestionarioBigFive window = new QuestionarioBigFive(usuarioLogado);
+                window.frame.setVisible(true);
+			}
+		});
+		btnNao.setBounds(401, 148, 89, 23);
+		frame.getContentPane().add(btnNao);
+	}
+
+}
