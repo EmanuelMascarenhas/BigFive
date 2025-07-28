@@ -1,0 +1,150 @@
+package sistemacompleto2;
+
+import java.sql.PreparedStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import javax.swing.JOptionPane;
+
+
+public class BancoDeDados {
+	public Connection connection = null;
+	public Statement statement = null;
+	public ResultSet resultset = null;
+	
+	
+	public void conectar() {
+		String servidor = "jdbc:mysql://localhost:3306/cadastro";
+		String usuario = "root";
+		String senha = "Aluno";
+		String driver = "com.mysql.cj.jdbc.Driver";
+		try {
+			Class.forName(driver);
+			this.connection = DriverManager.getConnection(servidor,usuario,senha);
+			this.statement = this.connection.createStatement();
+		} catch (Exception e) {
+			System.out.println("Não foi possivel conectar ao banco: "+ e.getMessage());
+		}
+	}
+	
+	
+	public boolean estaConectado() {
+		if(this.connection != null) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	public boolean verificarUsuario(String usuario, String senha) {
+		try {
+			String query = "SELECT * FROM cadusuarios WHERE usuario = '" + usuario + "' AND senha = '" + senha + "'";
+			this.resultset = this.statement.executeQuery(query);
+			while(this.resultset.next()) {
+				return true;	
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Não foi possivel acessar!"+e.getMessage(),"Erro",1);
+		}
+		return false;
+	}
+
+	public boolean validarUsuario(String usuario) {
+		try {
+			String query = "Select * from cadusuarios where usuario ='"+usuario+"'";
+			this.resultset = this.statement.executeQuery(query);
+			while(this.resultset.next()) {
+				return true;
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Não foi possivel acessar!"+e.getMessage(),"Erro",1);
+		}
+		return false;
+	}
+	
+	
+	
+	
+	public void desconectar() {
+		try {
+			this.connection.close();
+		} catch (Exception e) {
+			System.out.println("Não foi possivel desconectar! "+ e.getMessage());
+		}
+	}
+	
+	public void inserirUsuario(String nome, String email, String cpf, String endereco, String numero, String bairro, String cidade, String estado, String cep, String telefone,
+			String telefone2, String sexo, String datanasc, String usuario, String senha) {
+		try {
+			String query = "insert into cadusuarios(nome,email,cpf,endereco,numero,bairro,cidade,estado,cep,telefone,telefone2,sexo,datanasc,usuario,senha) values ('"+nome+"','"+email+"','"+cpf+"','"+endereco+"','"+numero+"','"+bairro+"','"+cidade+"','"+estado+"','"+cep+"','"+telefone+"','"+telefone2+"','"+sexo+"','"+datanasc+"','"+usuario+"','"+senha+"')";
+			this.statement.executeUpdate(query);
+		} catch (Exception e) {
+			System.out.println("Não foi possivel cadastrar o usuaio! "+ e.getMessage());
+		}
+	}
+	
+	
+	public void atulaizar(int id, String nome, String telefone) {
+		try {
+			String query = "update contato set nome = '"+nome+"',telefone = '"+telefone+"' where id = "+id+"";
+			this.statement.executeUpdate(query);
+		} catch (Exception e) {
+			System.out.println("Não foi possivel excluir o contato! " + e.getMessage());
+		}
+	}
+	
+	public void excluir(int id) {
+		try {
+			String query = "delete from contato where id = '"+id+"'";
+			this.statement.executeUpdate(query);
+		} catch (Exception e) {
+			System.out.println("Não foi possivel excluir o contato! " + e.getMessage());
+		}
+	}
+	
+	public void inserirResultadoQuestionario(int id_usuario, String nome, String extroversao, String estabilidadeEmocional, String aberturaExperiencias,
+            String conscienciosidade, String amabilidade, String urlQuestionario) {
+			String sql = "INSERT INTO ResultQuestionario(id_usuario, nome_usuario, Extroversão, Estabilidade_Emocional, Abertura_a_Experiências, Conscienciosidade, Amabilidade) " +
+				"VALUES (?, ?, ?, ?, ?, ?,?)";
+				try (PreparedStatement pst = this.connection.prepareStatement(sql)) {
+					pst.setInt(1, id_usuario);
+					pst.setString(2, nome);
+					pst.setString(3, extroversao);
+					pst.setString(4, estabilidadeEmocional);
+					pst.setString(5, aberturaExperiencias);
+					pst.setString(6, conscienciosidade);
+					pst.setString(7, amabilidade);
+
+					pst.executeUpdate();
+						System.out.println("Resultado do questionário inserido com sucesso!");
+				} catch (Exception e) {
+						System.out.println("Erro ao inserir resultado do questionário: " + e.getMessage());
+				}
+			}
+	
+	public String id_usuario(String nome) {
+		try {
+			String query = "Select id from cadusuarios where usuario ='"+nome+"'";
+			this.resultset = this.statement.executeQuery(query); //this.statement.executeQuery(query);
+			while(this.resultset.next()) {
+				String id = this.resultset.getString("id");
+				return id;
+			}
+		}catch(Exception e) {
+			System.out.println("erro");
+		}
+		return null;
+	}
+
+
+
+
+
+	}
+	
+
+	
+
+
