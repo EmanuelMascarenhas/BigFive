@@ -20,7 +20,7 @@ public class telalogin {
 	JFrame frame;
 	private JTextField txtUser;
 	private JPasswordField txtPassword;
-
+	String usuario;
 	/**
 	 * Launch the application.
 	 */
@@ -51,6 +51,11 @@ public class telalogin {
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	
+
+	public String getUsuario() {
+	    return usuario;
+	}
 	private void initialize() {
 		frame = new JFrame();
 		frame.getContentPane().setBackground(new Color(135, 213, 250));
@@ -109,26 +114,35 @@ public class telalogin {
 		
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String usuario = txtUser.getText();
-				String senha = txtPassword.getText();
-				BancoDeDados banc = new BancoDeDados();
-				banc.conectar();
-				if(banc.estaConectado()) {
-					if(banc.verificarUsuario(usuario, senha)) {
-						JOptionPane.showMessageDialog(null, "Acesso permitido!","Aviso",1);
-						telasis window = new telasis(usuario);
-						window.frame.setVisible(true);
-					} else {
-						JOptionPane.showMessageDialog(null, "Acesso negado!","Aviso",1);
-					}
-				} else {
-					JOptionPane.showMessageDialog(null, "Não foi possivel conectar ao banco de dados!","Erro",1);
-				}
-			}
+		    public void actionPerformed(ActionEvent e) {
+		        String usuario = txtUser.getText().trim();
+		        String senha = new String(txtPassword.getPassword()).trim();
+
+		        // Validação de campos vazios
+		        if (usuario.isEmpty() || senha.isEmpty()) {
+		            JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!", "Campos obrigatórios", JOptionPane.WARNING_MESSAGE);
+		            return; // Interrompe o login se campos estiverem vazios
+		        }
+
+		        BancoDeDados banc = new BancoDeDados();
+		        banc.conectar();
+
+		        if (banc.estaConectado()) {
+		            if (banc.verificarUsuario(usuario, senha)) {
+		                JOptionPane.showMessageDialog(null, "Acesso permitido!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+		                QuestionarioBigFive window = new QuestionarioBigFive(usuario);
+		                window.frame.setVisible(true);
+		            } else {
+		                JOptionPane.showMessageDialog(null, "Acesso negado! Usuário ou senha incorretos.", "Aviso", JOptionPane.ERROR_MESSAGE);
+		            }
+		        } else {
+		            JOptionPane.showMessageDialog(null, "Não foi possível conectar ao banco de dados!", "Erro", JOptionPane.ERROR_MESSAGE);
+		        }
+		    }
 		});
 		btnLogin.setBounds(140, 319, 112, 23);
 		frame.getContentPane().add(btnLogin);
+
 		
 		JButton btnSing = new JButton("Sing");
 		btnSing.addActionListener(new ActionListener() {
@@ -142,5 +156,7 @@ public class telalogin {
 		
 		
 	}
+	
 }
+
 
